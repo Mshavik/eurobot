@@ -37,11 +37,13 @@ void loop()
 
 {
  
-  driveForward(300, 150);
+  turnLeft(90, 150);
  delay(5000);
  
- driveBackward(300, 150);
+  turnRight(90, 150);
  delay(5000);
+ 
+ 
   
                 //Stop in between each command to prevent momentum causing wheel skid.
  
@@ -102,6 +104,68 @@ void driveBackward(int mm, int power )
   leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
   rightWheel.setMotorPower(minRightSpeed);
 }
+
+void turnRight(int degree, int power )
+{
+  leftQeiCounts = 0; // It is good practice to reset encoder values at the start of a function.
+ rightQeiCounts = 0;
+  //Calculate inches by multiplying the ratio we determined earlier with the amount of 
+  //inches to go, then divide by ten as the ratio used is for an inch value.
+  //Since we don't want to calculate every iteration of the loop, we will find the clicks needed 
+  //before we begin the loop.
+  int forwardTickGoal =  (33 * degree) / 90;
+  
+    
+  
+  
+ 
+  while(-leftQeiCounts < forwardTickGoal)
+  {
+    
+   
+  leftWheel.setMotorPower(power); //full speed ahead
+  rightWheel.setMotorPower(-power);
+  }
+  leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
+  rightWheel.setMotorPower(minRightSpeed);
+}
+
+
+
+void turnLeft(int degree, int power )
+{
+  leftQeiCounts = 0; // It is good practice to reset encoder values at the start of a function.
+ rightQeiCounts = 0;
+  //Calculate inches by multiplying the ratio we determined earlier with the amount of 
+  //inches to go, then divide by ten as the ratio used is for an inch value.
+  //Since we don't want to calculate every iteration of the loop, we will find the clicks needed 
+  //before we begin the loop.
+  int forwardTickGoal =  (33 * degree) / 90;
+  
+    
+  
+  
+ 
+  while(rightQeiCounts < forwardTickGoal)
+  {
+    Serial.print(forwardTickGoal);
+  Serial.print(" ");
+  Serial.println(rightQeiCounts);
+    
+   
+  leftWheel.setMotorPower(-power); //full speed ahead
+  rightWheel.setMotorPower(power);
+  }
+  leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
+  rightWheel.setMotorPower(minRightSpeed);
+}
+
+
+
+
+
+
+
 
 
 void QEI_LeftWheel()
