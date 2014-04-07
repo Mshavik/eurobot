@@ -5,7 +5,7 @@ HUBeeBMDWheel rightWheel;
 
 int maxLeftSpeed = 150, maxRightSpeed = 150;
 int minLeftSpeed = 0, minRightSpeed = 0;
-
+int long interval = 90000;
 int leftQeiAPin  = 2; //external interrupt 0
 int leftQeiBPin  = 4;
 int rightQeiAPin = 3; //external interrupt 1
@@ -35,20 +35,27 @@ void setup()
 }
 
 
-void loop()
-
+void loop(){
+unsigned long millis();
+unsigned long currentMillis = millis();
+if (currentMillis < interval) 
 {
-  while(true)
-  {
+  
+  driveForwardTillWall(300, 75);
+ delay(1000);
  
  driveForwardTillWall(300, 75);
  delay(1000);
  
-  }
- 
+ driveForwardTillWall(300, 75);
+ delay(1000);
  
   
-                //Stop in between each command to prevent momentum causing wheel skid.
+
+}
+ 
+   leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
+  rightWheel.setMotorPower(minRightSpeed);             //Stop in between each command to prevent momentum causing wheel skid.
  
 }
 
@@ -92,17 +99,17 @@ void driveForwardTillWall(int mm, int power )
  
   while(leftQeiCounts < forwardTickGoal)
   {
-    if(val > 580){
-    Serial.print(forwardTickGoal);
+    if(val < 550){
+    Serial.print(val);
   Serial.print(" ");
-  Serial.println(leftQeiCounts);
+  Serial.println(val);
    
   leftWheel.setMotorPower(power); //full speed ahead
   rightWheel.setMotorPower(power);
     }
   else{
     turnRight(90,150);
-    driveForward(300,150);
+    driveForwardTillWall(300,150);
     turnLeft(90,150);
     driveForward(300,150);
     }
@@ -129,9 +136,6 @@ void driveBackward(int mm, int power )
   while(-leftQeiCounts < backwardTickGoal)
   {
     
-    Serial.print(backwardTickGoal);
-  Serial.print(" ");
-  Serial.println(leftQeiCounts);
    
   leftWheel.setMotorPower(-power); //full speed ahead
   rightWheel.setMotorPower(-power);
@@ -183,9 +187,6 @@ void turnLeft(int degree, int power )
  
   while(rightQeiCounts < forwardTickGoal)
   {
-    Serial.print(forwardTickGoal);
-  Serial.print(" ");
-  Serial.println(rightQeiCounts);
     
    
   leftWheel.setMotorPower(-power); //full speed ahead
