@@ -12,6 +12,8 @@ int rightQeiAPin = 3; //external interrupt 1
 int rightQeiBPin = 7;
 
 int leftQeiCounts = 0, rightQeiCounts = 0;
+int sensorPin = A0;
+int val = analogRead(sensorPin);
 
 void setup()
 {
@@ -36,20 +38,19 @@ void setup()
 void loop()
 
 {
+  while(true)
+  {
  
-  turnLeft(90, 150);
- delay(5000);
+ driveForwardTillWall(300, 75);
+ delay(1000);
  
-  turnRight(90, 150);
- delay(5000);
+  }
  
  
   
                 //Stop in between each command to prevent momentum causing wheel skid.
  
 }
-
-
 
 void driveForward(int mm, int power )
 {
@@ -71,6 +72,40 @@ void driveForward(int mm, int power )
    
   leftWheel.setMotorPower(power); //full speed ahead
   rightWheel.setMotorPower(power);
+  }
+  leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
+  rightWheel.setMotorPower(minRightSpeed);
+}
+
+
+
+void driveForwardTillWall(int mm, int power )
+{
+  leftQeiCounts = 0; // It is good practice to reset encoder values at the start of a function.
+ 
+  //Calculate inches by multiplying the ratio we determined earlier with the amount of 
+  //inches to go, then divide by ten as the ratio used is for an inch value.
+  //Since we don't want to calculate every iteration of the loop, we will find the clicks needed 
+  //before we begin the loop.
+  int forwardTickGoal = mm/ 3;
+  
+ 
+  while(leftQeiCounts < forwardTickGoal)
+  {
+    if(val > 580){
+    Serial.print(forwardTickGoal);
+  Serial.print(" ");
+  Serial.println(leftQeiCounts);
+   
+  leftWheel.setMotorPower(power); //full speed ahead
+  rightWheel.setMotorPower(power);
+    }
+  else{
+    turnRight(90,150);
+    driveForward(300,150);
+    turnLeft(90,150);
+    driveForward(300,150);
+    }
   }
   leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
   rightWheel.setMotorPower(minRightSpeed);
