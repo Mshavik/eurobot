@@ -41,14 +41,15 @@ unsigned long currentMillis = millis();
 if (currentMillis < interval) 
 {
   
-  driveForwardTillWall(300, 75);
- delay(1000);
+  driveForward(400, 200);
+ delay(10);
  
- driveForwardTillWall(300, 75);
- delay(1000);
+ turnLeft(90, 150);
+ delay(10);
  
- driveForwardTillWall(300, 75);
- delay(1000);
+  driveForward(600, 200);
+ delay(10);
+ whil
  
   
 
@@ -99,6 +100,7 @@ void driveForwardTillWall(int mm, int power )
  
   while(leftQeiCounts < forwardTickGoal)
   {
+    val = analogRead(A0);
     if(val < 550){
     Serial.print(val);
   Serial.print(" ");
