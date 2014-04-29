@@ -5,7 +5,7 @@ HUBeeBMDWheel rightWheel;
 
 int maxLeftSpeed = 150, maxRightSpeed = 150;
 int minLeftSpeed = 0, minRightSpeed = 0;
-int long interval = 90000;
+int long interval = 88000;
 int leftQeiAPin  = 2; //external interrupt 0
 int leftQeiBPin  = 4;
 int rightQeiAPin = 3; //external interrupt 1
@@ -41,15 +41,33 @@ unsigned long currentMillis = millis();
 if (currentMillis < interval) 
 {
   
-  driveForward(400, 200);
- delay(10);
- 
- turnLeft(90, 150);
- delay(10);
- 
-  driveForward(600, 200);
- delay(10);
- whil
+ driveForwardTillWall(420,200);
+ delay(100);
+ turnLeft(60,150);
+ delay(100);
+ driveForwardTillWall(580,200);
+ delay(100);
+ turnRight(155,150);
+ delay(100);
+ driveForwardTillWall(350,200);
+ delay(100);
+ turnLeft(65,150);
+ delay(100);
+ driveForwardTillWall(300,200);
+ delay(100);
+ turnLeft(65,150);
+ delay(100);
+ driveForwardTillWall(150,200);
+ delay(100);
+ turnRight(65,150);
+ delay(100);
+ driveForwardTillWall(300,200);
+ delay(100);
+ turnLeft(65,150);
+ delay(100);
+  driveForwardTillWall(190,200);
+ delay(90000);
+
  
   
 
@@ -68,7 +86,7 @@ void driveForward(int mm, int power )
   //inches to go, then divide by ten as the ratio used is for an inch value.
   //Since we don't want to calculate every iteration of the loop, we will find the clicks needed 
   //before we begin the loop.
-  int forwardTickGoal = mm/ 3;
+  int forwardTickGoal = mm/3 ;
   
   
  
@@ -101,7 +119,7 @@ void driveForwardTillWall(int mm, int power )
   while(leftQeiCounts < forwardTickGoal)
   {
     val = analogRead(A0);
-    if(val < 550){
+    if(val < 140){
     Serial.print(val);
   Serial.print(" ");
   Serial.println(val);
@@ -110,10 +128,8 @@ void driveForwardTillWall(int mm, int power )
   rightWheel.setMotorPower(power);
     }
   else{
-    turnRight(90,150);
-    driveForwardTillWall(300,150);
-    turnLeft(90,150);
-    driveForward(300,150);
+    leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
+  rightWheel.setMotorPower(minRightSpeed); 
     }
   }
   leftWheel.setMotorPower(minLeftSpeed); //full speed ahead
